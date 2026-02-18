@@ -1,0 +1,8 @@
+# Core runtime dependencies for Casm Clips Python service
+# Install with: python -m pip install -r python_service/requirements.txt
+
+# Optional but recommended for production-quality local AI processing
+openai-whisper>=20231117
+opencv-python>=4.10.0.84
+numpy>=1.26.4
+torch>=2.2.0

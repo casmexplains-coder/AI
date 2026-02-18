@@ -1,0 +1,20 @@
+{
+  "name": "casm-clips",
+  "version": "0.1.0",
+  "description": "Offline AI short clip generator for local desktop workflows.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "lint": "node scripts/lint.js",
+    "test": "node tests/smoke.test.js",
+    "setup:windows": "powershell -ExecutionPolicy Bypass -File scripts/setup_windows.ps1",
+    "check:deps": "node tests/smoke.test.js"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0"
+  },
+  "devDependencies": {
+    "electron": "^30.0.9"
+  }
+}
