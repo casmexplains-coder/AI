@@ -173,17 +173,43 @@ def render_clip(video_path: str, clip: ClipCandidate, output_path: Path, subtitl
     subtitle_safe = str(subtitle_path).replace("\\", "\\\\").replace(":", "\\:")
     vf = f"{video_filter},subtitles='{subtitle_safe}':force_style='FontName=Inter,PrimaryColour=&HFFFFFF&,OutlineColour=&H000000&,Bold=1,FontSize=12'"
 
-    cmd = ["ffmpeg", "-y", "-i", video_path, "-ss", str(clip.start), "-to", str(clip.end)]
+    clip_duration = max(0.1, clip.end - clip.start)
+
+    # NOTE: ffmpeg input options (like -hwaccel) must be placed before their input file.
+    # The Windows error reported by users was caused by ordering -hwaccel after -i.
+    cmd = ["ffmpeg", "-y"]
     if gpu:
         cmd.extend(["-hwaccel", "auto"])
     cmd.extend([
+        "-ss", str(clip.start),
+        "-t", str(clip_duration),
+        "-i", video_path,
         "-vf", vf,
         "-c:v", "libx264",
         "-preset", "fast",
         "-c:a", "aac",
-        str(output_path)
+        str(output_path),
     ])
-    run(cmd)
+
+    try:
+        run(cmd)
+    except RuntimeError:
+        # Graceful fallback for machines/drivers where hwaccel auto selection fails.
+        if gpu:
+            fallback_cmd = [
+                "ffmpeg", "-y",
+                "-ss", str(clip.start),
+                "-t", str(clip_duration),
+                "-i", video_path,
+                "-vf", vf,
+                "-c:v", "libx264",
+                "-preset", "fast",
+                "-c:a", "aac",
+                str(output_path),
+            ]
+            run(fallback_cmd)
+            return
+        raise
 
 
 def handle_analyze(args):
