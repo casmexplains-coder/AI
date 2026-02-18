@@ -1,0 +1,39 @@
+:root {
+  --bg: #090909;
+  --panel: #121212;
+  --accent: #00ff88;
+  --muted: #bbbbbb;
+  --line: #212121;
+}
+
+* { box-sizing: border-box; font-family: Inter, Segoe UI, sans-serif; }
+body { margin: 0; background: var(--bg); color: #fff; }
+.app-shell { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+.sidebar { border-right: 1px solid var(--line); padding: 24px 18px; background: #0c0c0c; }
+.sidebar h1 { color: var(--accent); font-size: 1.7rem; margin-top: 0; }
+nav { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.nav-btn { background: #1a1a1a; color: white; border: 1px solid var(--line); padding: 10px; cursor: pointer; border-radius: 10px; }
+.nav-btn.active { border-color: var(--accent); color: var(--accent); }
+.main-panel { padding: 20px; }
+.view { display: none; }
+.view.active { display: block; }
+.input-bar { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; margin-bottom: 18px; }
+input, button, select { border-radius: 10px; border: 1px solid #2d2d2d; padding: 10px 12px; background: #161616; color: #fff; }
+button { cursor: pointer; }
+button.primary { background: linear-gradient(120deg, #00cc66, #00ff88); color: #03160d; border: none; font-weight: bold; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
+.meta-grid, .preview-grid { display: grid; gap: 14px; margin-bottom: 14px; }
+.meta-grid { grid-template-columns: 1fr 1fr; }
+.preview-grid { grid-template-columns: 1.3fr 1fr; }
+#videoThumb { width: 100%; max-height: 160px; object-fit: cover; border-radius: 8px; background: #030303; }
+#timeline { display: flex; flex-direction: column; gap: 8px; max-height: 370px; overflow: auto; }
+.timeline-row { border: 1px solid #2b2b2b; border-left: 4px solid var(--accent); border-radius: 9px; padding: 8px; }
+.timeline-row p { margin: 4px 0; color: var(--muted); }
+#clipPreview { width: 100%; min-height: 420px; background: #000; border-radius: 12px; }
+.settings-grid { display: grid; grid-template-columns: repeat(2, minmax(250px, 1fr)); gap: 12px; margin-bottom: 14px; }
+label { display: flex; flex-direction: column; gap: 6px; color: var(--muted); }
+progress { width: 100%; height: 16px; border-radius: 8px; }
+#captionPreview { margin-top: 10px; padding: 10px; border-radius: 8px; background: #0a0a0a; color: #fef08a; font-weight: 700; }
+#projectList { display: flex; flex-direction: column; gap: 10px; }
+.project-card { border: 1px solid #2b2b2b; border-radius: 10px; padding: 12px; background: #121212; }
+.capabilities ul { padding-left: 18px; color: var(--muted); }
