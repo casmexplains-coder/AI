@@ -105,3 +105,4 @@ This prints local capability checks for:
 
 - If Whisper/OpenCV/Torch are not available, current pipeline can still run using its built-in local fallback logic.
 - For full production-quality AI detection, keep `openai-whisper`, `opencv-python`, and `torch` installed.
+- Rendering currently uses a CPU-safe ffmpeg path (including Windows) for maximum stability; GPU toggle is reserved for a future hardened implementation.

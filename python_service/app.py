@@ -6,6 +6,7 @@ import os
 import random
 import re
 import subprocess
+import sys
 from dataclasses import dataclass, asdict
 from pathlib import Path
 
@@ -177,10 +178,10 @@ def render_clip(video_path: str, clip: ClipCandidate, output_path: Path, subtitl
 
     # NOTE: ffmpeg input options (like -hwaccel) must be placed before their input file.
     # The Windows error reported by users was caused by ordering -hwaccel after -i.
-    cmd = ["ffmpeg", "-y"]
-    if gpu:
-        cmd.extend(["-hwaccel", "auto"])
-    cmd.extend([
+    # Always use CPU-safe command. We keep `gpu` as input for compatibility,
+    # but avoid emitting -hwaccel because it is error-prone on many Windows setups.
+    cmd = [
+        "ffmpeg", "-y",
         "-ss", str(clip.start),
         "-t", str(clip_duration),
         "-i", video_path,
@@ -189,27 +190,13 @@ def render_clip(video_path: str, clip: ClipCandidate, output_path: Path, subtitl
         "-preset", "fast",
         "-c:a", "aac",
         str(output_path),
-    ])
+    ]
 
     try:
         run(cmd)
-    except RuntimeError:
-        # Graceful fallback for machines/drivers where hwaccel auto selection fails.
-        if gpu:
-            fallback_cmd = [
-                "ffmpeg", "-y",
-                "-ss", str(clip.start),
-                "-t", str(clip_duration),
-                "-i", video_path,
-                "-vf", vf,
-                "-c:v", "libx264",
-                "-preset", "fast",
-                "-c:a", "aac",
-                str(output_path),
-            ]
-            run(fallback_cmd)
-            return
-        raise
+    except RuntimeError as exc:
+        # Keep a clearer message for Electron UI while preserving ffmpeg details.
+        raise RuntimeError(f"Clip render failed for {output_path.name}: {exc}")
 
 
 def handle_analyze(args):
@@ -241,6 +228,10 @@ def handle_analyze(args):
 
 
 def handle_render(args):
+    if args.gpu and sys.platform == "win32":
+        # Explicitly ignore --gpu on Windows for stability.
+        args.gpu = False
+
     project_path = Path(args.project)
     project = json.loads(project_path.read_text(encoding="utf-8"))
     transcript = json.loads(Path(project["transcript_path"]).read_text(encoding="utf-8"))
