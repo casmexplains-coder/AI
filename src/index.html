@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Casm Clips</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <h1>Casm Clips</h1>
+      <nav>
+        <button class="nav-btn active" data-view="home">Home</button>
+        <button class="nav-btn" data-view="projects">Projects</button>
+        <button class="nav-btn" data-view="settings">Settings</button>
+      </nav>
+      <div class="capabilities">
+        <h4>System</h4>
+        <ul id="systemCapabilities"></ul>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <section id="home" class="view active">
+        <div class="input-bar">
+          <input id="inputSource" placeholder="Paste YouTube URL, direct MP4 URL, or pick a local file..." />
+          <button id="browseButton">Browse</button>
+          <button id="analyzeButton" class="primary">Analyze</button>
+        </div>
+
+        <div class="meta-grid">
+          <div class="panel">
+            <h3>Video Metadata</h3>
+            <img id="videoThumb" alt="thumbnail" />
+            <p><strong>Title:</strong> <span id="videoTitle">-</span></p>
+            <p><strong>Duration:</strong> <span id="videoDuration">-</span></p>
+          </div>
+
+          <div class="panel">
+            <h3>Processing</h3>
+            <progress id="analysisProgress" max="100" value="0"></progress>
+            <p id="statusText">Idle</p>
+            <button id="renderButton" class="primary" disabled>Export MP4 (1080x1920)</button>
+          </div>
+        </div>
+
+        <div class="preview-grid">
+          <div class="panel">
+            <h3>Timeline Preview</h3>
+            <div id="timeline"></div>
+          </div>
+          <div class="panel">
+            <h3>Clip Preview</h3>
+            <video id="clipPreview" controls></video>
+            <div id="captionPreview"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="view">
+        <h2>Projects</h2>
+        <div id="projectList"></div>
+      </section>
+
+      <section id="settings" class="view">
+        <h2>Settings</h2>
+        <div class="settings-grid">
+          <label>Output Directory <input id="outputDir" /></label>
+          <label>Caption Style
+            <select id="captionStyle">
+              <option value="neon">Neon</option>
+              <option value="clean">Clean</option>
+              <option value="minimal">Minimal</option>
+            </select>
+          </label>
+          <label>Font Family <input id="fontFamily" /></label>
+          <label>Clips per video <input id="clipsPerVideo" type="number" min="1" max="10" /></label>
+          <label>Min clip duration (sec) <input id="minClipSeconds" type="number" min="10" max="60" /></label>
+          <label>Max clip duration (sec) <input id="maxClipSeconds" type="number" min="20" max="120" /></label>
+          <label><input id="gpuAcceleration" type="checkbox" /> GPU acceleration</label>
+          <label><input id="autoMusic" type="checkbox" /> Auto music underlay</label>
+          <label>Language <input id="language" placeholder="auto/en/es/..." /></label>
+        </div>
+        <button id="saveSettings" class="primary">Save Settings</button>
+      </section>
+    </main>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
